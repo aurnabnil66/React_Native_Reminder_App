@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SET_ALARM" />
 
     <application
       android:name=".MainApplication"
@@ -10,6 +15,16 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme"
       android:supportsRtl="true">
+
+      <!-- Alarm Receiver Activity -->
+      <activity android:name=".AlarmFullscreenActivity"
+        android:showWhenLocked="true"
+        android:turnScreenOn="true"
+        android:launchMode="singleTop"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"/>
+            
+        <receiver android:name=".AlarmReceiver" />
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
