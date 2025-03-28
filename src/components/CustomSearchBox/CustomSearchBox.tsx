@@ -3,6 +3,7 @@ import {ICustomSearchBoxProps} from '../../Interfaces/ICustomSearchBoxProps';
 import {TextInput, View} from 'react-native';
 import Ioncicons from 'react-native-vector-icons/Ionicons';
 import styles from './style';
+import {colors} from '../../theme/colors';
 const CustomSearchBox: FC<ICustomSearchBoxProps> = ({
   value,
   onChange,
@@ -14,7 +15,7 @@ const CustomSearchBox: FC<ICustomSearchBoxProps> = ({
   return (
     <View style={[styles.container, isFocused && styles.focused]}>
       <View style={styles.searchBoxInside}>
-        <Ioncicons name="search" size={24} color="#000" />
+        <Ioncicons name="search" size={24} color={colors.black} />
         <TextInput
           value={value}
           onChangeText={onChange}

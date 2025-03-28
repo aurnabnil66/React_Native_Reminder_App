@@ -1,7 +1,6 @@
 import {FC, useEffect} from 'react';
-import {View, Text} from 'react-native';
-
-import HomeScreen from './src/screens/HomeScreen/HomeScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import AppStackNavigator from './src/Navigator/AppStackNavigator';
 
 //import {NativeModules} from 'react-native';
 
@@ -11,9 +10,9 @@ const App: FC = () => {
   // }, [1]);
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <HomeScreen />
-    </View>
+    <NavigationContainer>
+      <AppStackNavigator />
+    </NavigationContainer>
   );
 };
 
