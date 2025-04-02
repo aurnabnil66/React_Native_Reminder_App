@@ -43,19 +43,9 @@ const taskSlice = createSlice({
     deleteTask: (state, action: PayloadAction<string>) => {
       state.tasks = state.tasks.filter(task => task.id !== action.payload);
     },
-
-    clearTaskDetails: state => {
-      state.currentTask = {
-        title: '',
-        reminderDate: '',
-        reminderTime: '',
-        description: '',
-      };
-    },
   },
 });
 
-export const {addTask, editTask, deleteTask, clearTaskDetails} =
-  taskSlice.actions;
+export const {addTask, editTask, deleteTask} = taskSlice.actions;
 
 export const taskReducer = taskSlice.reducer;

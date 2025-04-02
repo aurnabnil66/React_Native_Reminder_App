@@ -14,7 +14,7 @@ import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import {useDispatch} from 'react-redux';
-import {clearTaskDetails, editTask} from '../../store/slices/taskSlice';
+import {editTask} from '../../store/slices/taskSlice';
 import ToastPopUp from '../../utils/ToastPopUp';
 import {RootStackParamsList} from '../../Navigator/RootStackParamsList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
