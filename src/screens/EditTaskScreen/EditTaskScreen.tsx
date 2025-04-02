@@ -6,24 +6,48 @@ import styles from './style';
 import {colors} from '../../theme/colors';
 import {taskSchema} from '../../utils/task.schema';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
+import {useDispatch} from 'react-redux';
+import {clearTaskDetails, editTask} from '../../store/slices/taskSlice';
+import ToastPopUp from '../../utils/ToastPopUp';
+import {RootStackParamsList} from '../../Navigator/RootStackParamsList';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+
+type EditScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamsList,
+  'EditTask'
+>;
+
+type EditTaskRouteProp = RouteProp<RootStackParamsList, 'EditTask'>;
 
 const EditTaskScreen: FC = () => {
   const [disabled, setDisabled] = useState(false);
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [openTimePicker, setOpenTimePicker] = useState(false);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<EditScreenNavigationProp>();
+  const dispatch = useDispatch();
 
-  const handleCreateTask = () => {
-    setDisabled(true);
-    navigation.navigate('Home' as never);
+  const route = useRoute<EditTaskRouteProp>();
+  const {task} = route.params; // Retrieve the task data
+
+  const handleEditTask = (updatedTask: any, taskId: string) => {
+    setDisabled(true); // Disable the button before dispatching
+
+    try {
+      dispatch(editTask({...updatedTask, id: taskId}));
+      ToastPopUp('Task Saved Successfully');
+      navigation.navigate('Home' as never);
+    } catch (error) {
+      ToastPopUp('Failed to save task. Please try again.');
+      setDisabled(false); // Re-enable the button on error
+    }
   };
 
   const handleGoToHome = () => {
@@ -39,8 +63,8 @@ const EditTaskScreen: FC = () => {
             <Ionicons name="arrow-back-circle" size={28} color={colors.black} />
           </TouchableOpacity>
           <Text style={styles.headerText}>Edit Task</Text>
-          <TouchableOpacity>
-            <Text style={styles.clearText}>Clear</Text>
+          <TouchableOpacity onPress={handleGoToHome}>
+            <Ionicons name="home" size={24} color={colors.black} />
           </TouchableOpacity>
         </View>
 
@@ -50,13 +74,13 @@ const EditTaskScreen: FC = () => {
             <Formik
               validationSchema={taskSchema}
               initialValues={{
-                title: '',
-                reminderDate: '',
-                reminderTime: '',
-                description: '',
+                title: task?.title || '',
+                reminderDate: task?.reminderDate || '',
+                reminderTime: task?.reminderTime || '',
+                description: task?.description || '',
               }}
               onSubmit={values => {
-                handleCreateTask();
+                handleEditTask(values, task?.id);
                 console.log('Form Submitted:', values);
               }}>
               {({
@@ -66,6 +90,7 @@ const EditTaskScreen: FC = () => {
                 values,
                 touched,
                 errors,
+                resetForm,
               }) => (
                 <>
                   <View style={styles.inputHeaderStyle}>
@@ -77,7 +102,9 @@ const EditTaskScreen: FC = () => {
                       placeholderTextColor={colors.gray}
                     />
                     {touched.title && errors.title && (
-                      <Text style={styles.errorText}>{errors.title}</Text>
+                      <Text style={styles.errorText}>
+                        {errors.title.toString()}
+                      </Text>
                     )}
                   </View>
 
@@ -101,7 +128,7 @@ const EditTaskScreen: FC = () => {
                       />
                       {touched.reminderDate && errors.reminderDate && (
                         <Text style={styles.errorText}>
-                          {errors.reminderDate}
+                          {errors.reminderDate.toString()}
                         </Text>
                       )}
                     </View>
@@ -146,7 +173,7 @@ const EditTaskScreen: FC = () => {
                       />
                       {touched.reminderTime && errors.reminderTime && (
                         <Text style={styles.errorText}>
-                          {errors.reminderTime}
+                          {errors.reminderTime.toString()}
                         </Text>
                       )}
                     </View>
@@ -183,7 +210,7 @@ const EditTaskScreen: FC = () => {
                       />
                       {touched.description && errors.description && (
                         <Text style={styles.errorText}>
-                          {errors.description}
+                          {errors.description.toString()}
                         </Text>
                       )}
                     </View>
@@ -196,6 +223,24 @@ const EditTaskScreen: FC = () => {
                       onPress={handleSubmit}
                       disabled={disabled}
                     />
+                  </View>
+
+                  {/* Clear Button */}
+                  <View style={styles.clearButtonPosition}>
+                    <TouchableOpacity
+                      style={styles.clearButtonStyle}
+                      onPress={() => {
+                        resetForm({
+                          values: {
+                            title: '',
+                            reminderDate: '',
+                            reminderTime: '',
+                            description: '',
+                          },
+                        });
+                      }}>
+                      <Text style={styles.clearText}>Clear all</Text>
+                    </TouchableOpacity>
                   </View>
                 </>
               )}

@@ -44,10 +44,21 @@ const styles = StyleSheet.create({
   inputPosition: {
     marginTop: scale(15),
   },
+  clearButtonPosition: {
+    marginTop: scale(20),
+  },
   clearText: {
-    color: colors.blue,
+    color: colors.white,
     fontSize: moderateScale(16),
     fontWeight: '500',
+  },
+  clearButtonStyle: {
+    height: scale(50),
+    width: scale(200),
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.gray,
   },
 });
 

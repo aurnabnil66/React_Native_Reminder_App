@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {Formik} from 'formik';
 import CustomTextInput from '../../components/CustomTextInput/CustomTextInput';
@@ -13,6 +13,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
+import ToastPopUp from '../../utils/ToastPopUp';
+
+import {addTask} from '../../store/slices/taskSlice';
+import {useDispatch} from 'react-redux';
 
 const NewTaskScreen: FC = () => {
   const [disabled, setDisabled] = useState(false);
@@ -21,9 +25,19 @@ const NewTaskScreen: FC = () => {
 
   const navigation = useNavigation();
 
-  const handleCreateTask = () => {
-    setDisabled(true);
-    navigation.navigate('Home' as never);
+  const dispatch = useDispatch();
+
+  const handleCreateTask = (values: any) => {
+    setDisabled(true); // Disable the button before dispatching
+
+    try {
+      dispatch(addTask(values));
+      ToastPopUp('Task Created Successfully');
+      navigation.navigate('Home' as never);
+    } catch (error) {
+      ToastPopUp('Failed to create task. Please try again.');
+      setDisabled(false); // Re-enable the button on error
+    }
   };
 
   const handleGoToHome = () => {
@@ -39,8 +53,8 @@ const NewTaskScreen: FC = () => {
             <Ionicons name="arrow-back-circle" size={28} color={colors.black} />
           </TouchableOpacity>
           <Text style={styles.headerText}>New Task</Text>
-          <TouchableOpacity>
-            <Text style={styles.clearText}>Clear</Text>
+          <TouchableOpacity onPress={handleGoToHome}>
+            <Ionicons name="home" size={24} color={colors.black} />
           </TouchableOpacity>
         </View>
 
@@ -56,8 +70,7 @@ const NewTaskScreen: FC = () => {
                 description: '',
               }}
               onSubmit={values => {
-                handleCreateTask();
-                console.log('Form Submitted:', values);
+                handleCreateTask(values);
               }}>
               {({
                 handleChange,
@@ -66,6 +79,7 @@ const NewTaskScreen: FC = () => {
                 values,
                 touched,
                 errors,
+                resetForm,
               }) => (
                 <>
                   <View style={styles.inputHeaderStyle}>
@@ -196,6 +210,24 @@ const NewTaskScreen: FC = () => {
                       onPress={handleSubmit}
                       disabled={disabled}
                     />
+                  </View>
+
+                  {/* Clear Button */}
+                  <View style={styles.clearButtonPosition}>
+                    <TouchableOpacity
+                      style={styles.clearButtonStyle}
+                      onPress={() => {
+                        resetForm({
+                          values: {
+                            title: '',
+                            reminderDate: '',
+                            reminderTime: '',
+                            description: '',
+                          },
+                        });
+                      }}>
+                      <Text style={styles.clearText}>Clear all</Text>
+                    </TouchableOpacity>
                   </View>
                 </>
               )}

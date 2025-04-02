@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     height: scale(87),
     borderRadius: scale(10),
     justifyContent: 'center',
+    marginBottom: scale(10),
   },
   taskChipInside: {
     flexDirection: 'row',
@@ -58,6 +59,9 @@ const styles = StyleSheet.create({
   addTaskButtonPosition: {
     marginTop: scale(20),
     left: scale(290),
+  },
+  flatlistStyle: {
+    maxHeight: 390,
   },
 });
 
