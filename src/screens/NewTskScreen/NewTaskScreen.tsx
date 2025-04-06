@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {Formik} from 'formik';
 import CustomTextInput from '../../components/CustomTextInput/CustomTextInput';

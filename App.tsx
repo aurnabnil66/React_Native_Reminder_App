@@ -5,12 +5,12 @@ import {Provider as StoreProvider} from 'react-redux';
 import {store, persistor} from './src/store/store';
 import {PersistGate} from 'redux-persist/integration/react';
 
-//import {NativeModules} from 'react-native';
+import {NativeModules} from 'react-native';
 
 const App: FC = () => {
-  // useEffect(() => {
-  //   NativeModules.AlarmModule.setAlarmInSeconds(10);
-  // }, [1]);
+  useEffect(() => {
+    NativeModules.AlarmModule.setAlarmInSeconds(10);
+  }, [1]);
 
   return (
     <StoreProvider store={store}>
