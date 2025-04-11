@@ -7,7 +7,16 @@ import App from './App';
 import {name as appName} from './app.json';
 
 import AlarmScreen from './src/screens/AlarmScreen/AlarmScreen';
+import {store} from './src/store/store';
 
 AppRegistry.registerComponent(appName, () => App);
 
-AppRegistry.registerComponent('AlarmScreen', () => AlarmScreen);
+const AlarmScreenIntent = () => {
+  return (
+    <Provider store={store}>
+      <AlarmScreen />
+    </Provider>
+  );
+};
+
+AppRegistry.registerComponent('AlarmScreen', () => AlarmScreenIntent);

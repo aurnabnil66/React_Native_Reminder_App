@@ -18,6 +18,8 @@ import ToastPopUp from '../../utils/ToastPopUp';
 import {addTask} from '../../store/slices/taskSlice';
 import {useDispatch} from 'react-redux';
 
+import {NativeModules} from 'react-native';
+
 const NewTaskScreen: FC = () => {
   const [disabled, setDisabled] = useState(false);
   const [openDatePicker, setOpenDatePicker] = useState(false);
@@ -27,12 +29,29 @@ const NewTaskScreen: FC = () => {
 
   const dispatch = useDispatch();
 
+  const {AlarmModule} = NativeModules;
+
   const handleCreateTask = (values: any) => {
     setDisabled(true); // Disable the button before dispatching
 
     try {
       dispatch(addTask(values));
       ToastPopUp('Task Created Successfully');
+
+      // Combine date and time into one moment object
+      const fullDateTime = moment(
+        `${values.reminderDate} ${values.reminderTime}`,
+        'D MMMM, YYYY hh:mm A',
+      );
+
+      const timestamp = fullDateTime.valueOf();
+
+      if (timestamp > Date.now()) {
+        AlarmModule.setAlarm(timestamp); // Set alarm
+      } else {
+        console.warn('Reminder time is in the past. Alarm not set.');
+      }
+
       navigation.navigate('Home' as never);
     } catch (error) {
       ToastPopUp('Failed to create task. Please try again.');

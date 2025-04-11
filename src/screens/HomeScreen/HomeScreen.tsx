@@ -27,15 +27,15 @@ const HomeScreen: FC = () => {
     (state: RootState) => state.taskAcivities?.tasks,
   );
 
-  const [filteredData, setFilteredData] = useState(allTasks || []);
+  const [filteredTasks, setFilteredTasks] = useState(allTasks || []);
 
   // Filter tasks and implement search
   useEffect(() => {
     // Filter tasks when searchTerm changes
     if (searchTerm.trim().length === 0) {
-      setFilteredData(allTasks); // Show all tasks when search is empty
+      setFilteredTasks(allTasks); // Show all tasks when search is empty
     } else {
-      setFilteredData(
+      setFilteredTasks(
         allTasks?.filter(task =>
           task.title?.toLowerCase().includes(searchTerm.toLowerCase()),
         ) || [],
@@ -82,7 +82,7 @@ const HomeScreen: FC = () => {
         {
           <FlatList
             style={styles.flatlistStyle}
-            data={filteredData}
+            data={filteredTasks}
             renderItem={({item}: any) => (
               <View style={styles.taskChip}>
                 <View style={styles.taskChipInside}>
