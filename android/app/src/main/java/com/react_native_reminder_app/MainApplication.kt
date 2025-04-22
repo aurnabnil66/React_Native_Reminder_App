@@ -24,6 +24,7 @@ class MainApplication : Application(), ReactApplication {
               // add(MyReactNativePackage())
               add(VectorIconsPackage())
               add(AlarmPackage())
+              add(AlarmSoundPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

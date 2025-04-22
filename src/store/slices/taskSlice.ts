@@ -1,6 +1,6 @@
-import {createSlice, nanoid, PayloadAction} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-interface Task {
+export interface Task {
   id?: string;
   title?: string;
   description?: string;
@@ -11,6 +11,7 @@ interface Task {
 interface TaskState {
   tasks: Task[];
   currentTask: Task;
+  currentTaskId?: string; // ID of the currently selected task -> needed for alarm screen
 }
 
 const initialState: TaskState = {
@@ -21,14 +22,19 @@ const initialState: TaskState = {
     reminderTime: '',
     description: '',
   },
+  currentTaskId: undefined, // initially undefined
 };
 
 const taskSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
+    // addTask: (state, action: PayloadAction<Task>) => {
+    //   state.tasks.push({id: nanoid(), ...action.payload});
+    // },
+
     addTask: (state, action: PayloadAction<Task>) => {
-      state.tasks.push({id: nanoid(), ...action.payload});
+      state.tasks.push(action.payload); // task with ID is passed by thunk
     },
 
     editTask: (state, action: PayloadAction<Task>) => {
@@ -43,9 +49,15 @@ const taskSlice = createSlice({
     deleteTask: (state, action: PayloadAction<string>) => {
       state.tasks = state.tasks.filter(task => task.id !== action.payload);
     },
+
+    // reducer to set the current task
+    setCurrentTaskId: (state, action: PayloadAction<string>) => {
+      state.currentTaskId = action.payload;
+    },
   },
 });
 
-export const {addTask, editTask, deleteTask} = taskSlice.actions;
+export const {addTask, editTask, deleteTask, setCurrentTaskId} =
+  taskSlice.actions;
 
 export const taskReducer = taskSlice.reducer;

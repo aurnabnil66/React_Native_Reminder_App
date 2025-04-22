@@ -15,10 +15,10 @@ import moment from 'moment';
 import CustomTextArea from '../../components/CustomTextArea/CustomTextArea';
 import ToastPopUp from '../../utils/ToastPopUp';
 
-import {addTask} from '../../store/slices/taskSlice';
-import {useDispatch} from 'react-redux';
-
 import {NativeModules} from 'react-native';
+import {createTaskWithId} from '../../store/thunks/createTaskWithId';
+import {useAppDispatch} from '../../store/hooks';
+import {setCurrentTaskId} from '../../store/slices/taskSlice';
 
 const NewTaskScreen: FC = () => {
   const [disabled, setDisabled] = useState(false);
@@ -27,15 +27,20 @@ const NewTaskScreen: FC = () => {
 
   const navigation = useNavigation();
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {AlarmModule} = NativeModules;
 
-  const handleCreateTask = (values: any) => {
+  const handleCreateTask = async (values: any) => {
     setDisabled(true); // Disable the button before dispatching
 
     try {
-      dispatch(addTask(values));
+      // dispatch(addTask(values));
+      const result = await dispatch(createTaskWithId(values)).unwrap();
+      const {id: taskId} = result;
+
+      console.log('Task ID:', taskId);
+
       ToastPopUp('Task Created Successfully');
 
       // Combine date and time into one moment object
@@ -47,7 +52,10 @@ const NewTaskScreen: FC = () => {
       const timestamp = fullDateTime.valueOf();
 
       if (timestamp > Date.now()) {
-        AlarmModule.setAlarm(timestamp); // Set alarm
+        dispatch(setCurrentTaskId(taskId));
+
+        AlarmModule.setAlarm(timestamp, taskId); // Set alarm
+        // console.log('NativeModules.AlarmModule', AlarmModule);
       } else {
         console.warn('Reminder time is in the past. Alarm not set.');
       }

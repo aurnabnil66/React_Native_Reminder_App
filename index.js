@@ -8,6 +8,7 @@ import {name as appName} from './app.json';
 
 import AlarmScreen from './src/screens/AlarmScreen/AlarmScreen';
 import {store} from './src/store/store';
+import {Provider} from 'react-redux';
 
 AppRegistry.registerComponent(appName, () => App);
 
